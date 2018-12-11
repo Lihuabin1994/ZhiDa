@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewData["Title"] = "SGX";
+}
+
+<style>
+    .form-control {
+        /*width: 15%;*/
+        height: 31px;
+        display: inline-block;
+    }
+
+    .tdf {
+        width: 100px;
+        height: 45px;
+        text-align: right;
+    }
+
+    .tdr {
+        width: 171px;
+    }
+
+    .page {
+        width: 81px;
+    }
+
+    .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+        background-color: cadetblue;
+    }
+
+    .table-hover > tbody > tr:hover {
+        background-color: burlywood;
+    }
+
+    .num {
+        background-color: burlywood;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+
+<link href="~/lib/bootstrap/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<script src="~/lib/jquery/dist/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.js"></script>
+
+<h1></h1>
+<form id="form_c">
+    <table class="tab-content">
+        <tbody>
+            <tr>
+                <td class="tdf"> Exchange:</td>
+                <td class="tdr"><input type="text" class="form-control" name="Exchange" id="Exchange" value="" /></td>
+                <td class="tdf">  Product Code:</td>
+                <td class="tdr"><input type="text" class="form-control" name="ProductCode" id="ProductCode" value="" /></td>
+                <td class="tdf">   Account No:</td>
+                <td class="tdr"><input type="text" class="form-control" name="AccountNo" id="AccountNo" value="" /></td>
+                <td class="tdf"> OrderID:</td>
+                <td class="tdr"><input type="text" class="form-control" name="OrderID" id="OrderID" value="" style="width:165px;" /></td>
+            </tr>
+            <tr style="width:50px;">
+                <td class="tdf"> Security Type:</td>
+                <td class="tdr">
+                    <select class="form-control" name="SecType" id="SecType">
+                        <option value=""></option>
+                        <option value="FUT">Future</option>
+                        <option value="OOF">Option</option>
+                    </select>
+                </td>
+                <td class="tdf">Side:</td>
+                <td class="tdr">
+                    <select class="form-control" name="Side" id="Side">
+                        <option value=""></option>
+                        <option value="1">Buy</option>
+                        <option value="2">Sell</option>
+                    </select>
+                </td>
+                <td class="tdf">  MMY:</td>
+                <td class="tdr"><input type="text" class="form-control" name="MMY" id="MMY" value="" /></td>
+                <td class="tdf">   Clearing Date:</td>
+                <td style="width:252px;">
+                    <div class="input-group date form_datetime col-md-5" data-date="1979-09-16" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" style="display: inline-block; width: 100%;float:left;">
+                        <input class="form-control" size="16" type="text" value="" name="BizDate" id="sdate" readonly style="width:165px;display:inline-block">
+                        <span class="input-group-addon"  style="height:31px;"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_input1" value="" /><br />
+                    <script type="text/javascript">
+                        $(".form_datetime").datetimepicker({
+                            minView: "month",
+                            format: "yyyy-mm-dd",
+                            autoclose: true,
+                            todayBtn: true,
+                            language: 'zh-CN',
+                            startDate: "2018-01-01",
+                            minuteStep: 10
+
+                        }).on("changeDate", function (e) {
+
+                        });
+
+                        $('.form_datetime').datetimepicker('setDate', new Date());
+                        //$("#dtp_input1").val(new Date().toLocaleDateString());
+
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdf">Page Size:</td>
+                <td class="tdr">
+                    <select class="form-control" name="PageSize" id="PageSize">
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="35">35</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </td>
+                <td class="tdf" colspan="6"><input type="submit" value="Search" class="btn btn-default" id="btn" onclick="func(event)" /> 
+                <input type="button" value="Export to Excel"  class="btn btn-default" id="btn" onclick="ExportExcel()" />
+                 @*<a asp-action="ExportExcel" asp-route="" class="btn btn-default" >Export to Excel</a>*@</td>
+               
+            </tr>
+        </tbody>
+    </table>
+</form>
+<div id="data">
+
+</div>
+<script>
+    function ExportExcel() { 
+        window.location.href = "/Trade/ExportExcel?" + $('#form_c').serialize();
+        //$.ajax({
+        //    type: "post",
+        //    url: "/Trade/condition",
+        //    data: $('#form_c').serialize(),
+        //    success: function (message) {
+        //        if (message == "Success") {
+        //            window.location.href = "/Trade/ExportExcel";
+        //        }
+        //        else { 
+        //            alert("Export failed");
+        //        }
+        //    }
+        //    /*
+        //     或者用jquery.form.min.js提交
+        //     $('#registSubmit').ajaxSubmit(function(message){
+        //        console.log(message);
+        //     })
+        //     */
+        //});
+    }
+    function openPage() { 
+       
+        if ($("#pageindex").val() != 0 && $("#pageindex").val() != "") { 
+            registPost($("#pageindex").val());
+        }
+    }
+   
+    registPost(1);
+    function func(event) {
+        event.preventDefault() //阻止form表单默认提交
+        registPost(1)
+
+    }
+    function registPost(pages) {
+        $.ajax({
+            type: "post",
+            url: "/Trade/data?page=" + pages,
+            data: $('#form_c').serialize(),
+            success: function (message) {
+                $("#data").html(message);
+            }
+            /*
+             或者用jquery.form.min.js提交
+             $('#registSubmit').ajaxSubmit(function(message){
+                console.log(message);
+             })
+             */
+        });
+    }
+   
+   
+</script>

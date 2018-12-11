@@ -1,0 +1,166 @@
+﻿@model ZhiDaCore.Common.PaginatedList<ZhiDaCore.Entity.Trades.Trade>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var firstDisable = Model.PageIndex == 1 ? "disabled" : "";
+    var lastDisable = Model.TotalPages == 0 ? "disabled" : (Model.PageIndex == Model.TotalPages ? "disabled" : "");
+}
+
+<table class="table table-hover table-bordered text-nowrap table-striped">
+    <thead>
+        <tr>
+            <td colspan="8" style="text-align:left;background-color:white; border: 0px solid transparent !important; ">
+                <div>
+                    <a class="btn btn-default @firstDisable page" onclick="registPost(1)">
+                        First
+                    </a>
+                    <a class="btn btn-default @prevDisabled page" onclick="registPost(@(Model.PageIndex)-1)">
+                        Previous
+                    </a>
+                    @*<a style="text-decoration:none;">PageIndex:@(Model.PageIndex),TotalPages:@(Model.TotalPages)</a>*@
+                    <a class="btn btn-default @nextDisabled page" onclick="registPost(@(Model.PageIndex)+1)">
+                        Next
+                    </a>
+                    <a class="btn btn-default @lastDisable page" onclick="registPost(@(Model.TotalPages))">
+                        Last
+                    </a>&nbsp;&nbsp;
+                    Page: <input class="form-control" style="width: 60px;height:34px;"
+                                 type="number" min="@(Model.TotalPages==0?0:1)" max="@(Model.TotalPages==0?0:Model.TotalPages)" id="pageindex" name="pageindex" oninput="if(value>@(Model.TotalPages)||value<@(Model.TotalPages==0?0:1))value=0" />
+                    <input class="btn btn-default" type="button" onclick="openPage()" value="Go" />
+                    <span>page @(Model.TotalPages == 0 ? 0 : Model.PageIndex) of @(Model.TotalPages) </span>
+                </div>
+            </td>
+            <td colspan="7" style="text-align:right;background-color:white; border: 0px solid transparent !important;">
+                <span class="num">Sell:@(Model.SellNum)&nbsp;&nbsp;</span>&nbsp;&nbsp;<span class="num">Buy:@(Model.BuyNum)&nbsp;&nbsp;</span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().BizDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TradeDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().OrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Exchange)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().AccountNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().BizUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ProductCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().MMY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SecType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().PutCall)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().StrikePx)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Side)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TradePrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Ccy)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody style="overflow-y:scroll;">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BizDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TradeDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Exchange)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BizUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MMY)
+                </td>
+                @if (item.SecType == "FUT")
+                {
+                    <td>
+                        Future
+                    </td>
+
+                }
+                else
+                {
+                    <td>
+                        Option
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.PutCall)
+                </td>
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.StrikePx)
+                </td>
+                @if (item.Side == "1")
+                {
+                    <td>
+                        Buy
+                    </td>
+
+                }
+                else
+                {
+                    <td>
+                        Sell
+                    </td>
+                }
+
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td style="text-align:right">
+                    @Html.DisplayFor(modelItem => item.TradePrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ccy)
+                </td>
+
+                @*<td>
+                        <a asp-action="Edit" asp-route-id="@item.SequenceID">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.SequenceID">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.SequenceID">Delete</a>
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+

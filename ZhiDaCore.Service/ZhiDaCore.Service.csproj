@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZhiDaCore.Appliaction\ZhiDaCore.Appliaction.csproj" />
+    <ProjectReference Include="..\ZhiDaCore.Data\ZhiDaCore.EFCore.csproj" />
+    <ProjectReference Include="..\ZhiDaCore.IService\ZhiDaCore.IService.csproj" />
+  </ItemGroup>
+
+</Project>
