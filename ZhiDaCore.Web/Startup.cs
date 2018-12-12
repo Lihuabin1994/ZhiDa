@@ -73,7 +73,7 @@ namespace ZhiDaCore.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//用于获取请求上下文
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc(x=> { x.Filters.Add(new LoginAttribute()); });
+            services.AddMvc(x=> { x.Filters.Add(new LoginAttribute()); });   //全局验证
             return RegisterAutofac(services);//注册Autofac
         }
         private IServiceProvider RegisterAutofac(IServiceCollection services)
@@ -96,7 +96,7 @@ namespace ZhiDaCore.Web
             {
                 try
                 {
-                    //注册当前程序集中以“Ser”结尾的类,暴漏类实现的所有接口，生命周期为PerLifetimeScope
+                    //注册当前程序集中以“Service”结尾的类,暴漏类实现的所有接口，生命周期为PerLifetimeScope
                     //builder.RegisterAssemblyTypes(System.Reflection.Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces();
                     builder.RegisterAssemblyTypes(GetAssembly("ZhiDaCore.IService")).Where(a => a.Name.EndsWith("IService")).AsImplementedInterfaces();
                     builder.RegisterAssemblyTypes(GetAssembly("ZhiDaCore.Service")).Where(a => a.Name.EndsWith("Service")).AsImplementedInterfaces();
